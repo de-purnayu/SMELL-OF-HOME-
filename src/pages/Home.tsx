@@ -44,7 +44,7 @@ export const Home = () => {
             <span className="inline-block px-4 py-1 bg-white rounded-full text-xs font-bold uppercase tracking-widest text-brand-soft-brown mb-6">
               Handcrafted with Love in Contai
             </span>
-            <h1 className="text-5xl md:text-8xl font-serif leading-tight mb-6">
+            <h1 className="text-4xl sm:text-5xl md:text-8xl font-serif leading-tight mb-6">
               Freshly Baked <br />
               <span className="text-brand-soft-brown italic">Happiness</span>
             </h1>

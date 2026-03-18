@@ -114,7 +114,7 @@ export const Checkout = () => {
                   <label className="block text-sm font-bold mb-2">First Name</label>
                   <input 
                     {...register('first_name')}
-                    className="w-full px-4 py-3 rounded-2xl border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink"
+                    className="w-full px-4 py-3 rounded-2xl border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink text-base"
                     placeholder="First name"
                   />
                   {errors.first_name && <p className="text-red-500 text-xs mt-1">{errors.first_name.message}</p>}
@@ -123,7 +123,7 @@ export const Checkout = () => {
                   <label className="block text-sm font-bold mb-2">Last Name</label>
                   <input 
                     {...register('last_name')}
-                    className="w-full px-4 py-3 rounded-2xl border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink"
+                    className="w-full px-4 py-3 rounded-2xl border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink text-base"
                     placeholder="Last name"
                   />
                   {errors.last_name && <p className="text-red-500 text-xs mt-1">{errors.last_name.message}</p>}
@@ -134,7 +134,7 @@ export const Checkout = () => {
                 <input 
                   {...register('email')}
                   type="email"
-                  className="w-full px-4 py-3 rounded-2xl border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink"
+                  className="w-full px-4 py-3 rounded-2xl border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink text-base"
                   placeholder="your@email.com"
                 />
                 {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
@@ -143,7 +143,7 @@ export const Checkout = () => {
                 <label className="block text-sm font-bold mb-2">Street Address</label>
                 <input 
                   {...register('street_address')}
-                  className="w-full px-4 py-3 rounded-2xl border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink"
+                  className="w-full px-4 py-3 rounded-2xl border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink text-base"
                   placeholder="Flat No, Building, Area"
                 />
                 {errors.street_address && <p className="text-red-500 text-xs mt-1">{errors.street_address.message}</p>}
@@ -153,7 +153,7 @@ export const Checkout = () => {
                   <label className="block text-sm font-bold mb-2">City</label>
                   <input 
                     {...register('city')}
-                    className="w-full px-4 py-3 rounded-2xl border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink"
+                    className="w-full px-4 py-3 rounded-2xl border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink text-base"
                     placeholder="City"
                   />
                   {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city.message}</p>}
@@ -162,7 +162,7 @@ export const Checkout = () => {
                   <label className="block text-sm font-bold mb-2">Zip Code</label>
                   <input 
                     {...register('zip_code')}
-                    className="w-full px-4 py-3 rounded-2xl border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink"
+                    className="w-full px-4 py-3 rounded-2xl border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink text-base"
                     placeholder="Zip code"
                   />
                   {errors.zip_code && <p className="text-red-500 text-xs mt-1">{errors.zip_code.message}</p>}

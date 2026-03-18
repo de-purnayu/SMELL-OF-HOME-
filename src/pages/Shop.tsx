@@ -93,7 +93,7 @@ export const Shop = () => {
               <select 
                 value={customCake.size}
                 onChange={(e) => setCustomCake({...customCake, size: e.target.value})}
-                className="w-full p-3 rounded-xl border border-brand-pink bg-white focus:ring-2 focus:ring-brand-pink outline-none"
+                className="w-full p-3 rounded-xl border border-brand-pink bg-white focus:ring-2 focus:ring-brand-pink outline-none text-base"
               >
                 <option>0.5kg</option>
                 <option>1kg</option>
@@ -107,7 +107,7 @@ export const Shop = () => {
               <select 
                 value={customCake.flavour}
                 onChange={(e) => setCustomCake({...customCake, flavour: e.target.value})}
-                className="w-full p-3 rounded-xl border border-brand-pink bg-white focus:ring-2 focus:ring-brand-pink outline-none"
+                className="w-full p-3 rounded-xl border border-brand-pink bg-white focus:ring-2 focus:ring-brand-pink outline-none text-base"
               >
                 <option>Chocolate</option>
                 <option>Vanilla</option>
@@ -124,7 +124,7 @@ export const Shop = () => {
                 placeholder="Describe the design, theme, or any specific decorations you'd like..."
                 value={customCake.design}
                 onChange={(e) => setCustomCake({...customCake, design: e.target.value})}
-                className="w-full p-4 rounded-xl border border-brand-pink bg-white focus:ring-2 focus:ring-brand-pink outline-none h-32"
+                className="w-full p-4 rounded-xl border border-brand-pink bg-white focus:ring-2 focus:ring-brand-pink outline-none h-32 text-base"
               />
             </div>
 
@@ -135,7 +135,7 @@ export const Shop = () => {
                 placeholder="Happy Birthday, etc..."
                 value={customCake.message}
                 onChange={(e) => setCustomCake({...customCake, message: e.target.value})}
-                className="w-full p-3 rounded-xl border border-brand-pink bg-white focus:ring-2 focus:ring-brand-pink outline-none"
+                className="w-full p-3 rounded-xl border border-brand-pink bg-white focus:ring-2 focus:ring-brand-pink outline-none text-base"
               />
             </div>
 
@@ -175,7 +175,7 @@ export const Shop = () => {
           <input
             type="text"
             placeholder="Search for your favorite cake..."
-            className="w-full pl-12 pr-4 py-3 bg-white rounded-full border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink"
+            className="w-full pl-12 pr-4 py-3 bg-white rounded-full border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink text-base"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />

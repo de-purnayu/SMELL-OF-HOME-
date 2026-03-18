@@ -75,7 +75,7 @@ export const Navbar = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: -20 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="fixed top-20 left-4 right-4 bg-brand-cream z-50 shadow-2xl rounded-[2.5rem] border border-brand-pink overflow-hidden md:hidden"
+              className="fixed top-20 left-4 right-4 bg-brand-cream z-50 shadow-2xl rounded-[2.5rem] border border-brand-pink overflow-y-auto max-h-[calc(100vh-6rem)] md:hidden"
             >
               <div className="p-6 flex flex-col gap-2">
                 {navLinks.map((link, idx) => (

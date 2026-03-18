@@ -65,14 +65,14 @@ export const ProductDetail = () => {
               referrerPolicy="no-referrer"
             />
           </div>
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-4 gap-2 sm:gap-4">
             {[
               'https://image2url.com/r2/default/images/1773226984144-7f345b06-9822-4b21-959f-f42e31280280.png',
               'https://image2url.com/r2/default/images/1773227058963-74aa938f-e831-4a95-9b79-573271915d10.png',
               'https://image2url.com/r2/default/images/1773227182831-b88c7fad-d015-4783-9c5d-f9b255a73ec1.png',
               'https://image2url.com/r2/default/images/1773226984144-7f345b06-9822-4b21-959f-f42e31280280.png'
             ].map((img, i) => (
-              <div key={i} className="aspect-square rounded-xl overflow-hidden cursor-pointer hover:opacity-80 transition-opacity">
+              <div key={i} className="aspect-square rounded-lg sm:rounded-xl overflow-hidden cursor-pointer hover:opacity-80 transition-opacity">
                 <img 
                   src={img} 
                   alt={`Cake view ${i + 1}`} 
@@ -138,7 +138,7 @@ export const ProductDetail = () => {
               <input
                 type="text"
                 placeholder="e.g. Happy Birthday Rahul!"
-                className="w-full px-4 py-3 rounded-2xl border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink"
+                className="w-full px-4 py-3 rounded-2xl border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink text-base"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
               />
