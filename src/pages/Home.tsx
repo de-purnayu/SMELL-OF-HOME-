@@ -3,14 +3,32 @@ import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ArrowRight, Star, Clock, CheckCircle, MapPin, Menu } from 'lucide-react';
 import { Product } from '../types';
+import { INITIAL_PRODUCTS } from '../constants/products';
+import { supabase } from '../lib/supabase';
 
 export const Home = () => {
-  const [featured, setFeatured] = React.useState<Product[]>([]);
+  const [featured, setFeatured] = React.useState<Product[]>(INITIAL_PRODUCTS.filter(p => p.is_featured));
 
   React.useEffect(() => {
-    fetch('/api/products/featured')
-      .then(res => res.json())
-      .then(setFeatured);
+    const fetchFeatured = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .eq('is_featured', 1);
+        
+        if (!error && data && data.length > 0) {
+          setFeatured(data);
+        } else {
+          setFeatured(INITIAL_PRODUCTS.filter(p => p.is_featured));
+        }
+      } catch (err) {
+        console.error("Failed to fetch featured products from Supabase:", err);
+        setFeatured(INITIAL_PRODUCTS.filter(p => p.is_featured));
+      }
+    };
+
+    fetchFeatured();
   }, []);
 
   return (

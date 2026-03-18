@@ -4,9 +4,11 @@ import { Search, Filter, ShoppingCart } from 'lucide-react';
 import { Product } from '../types';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { INITIAL_PRODUCTS } from '../constants/products';
+import { supabase } from '../lib/supabase';
 
 export const Shop = () => {
-  const [products, setProducts] = React.useState<Product[]>([]);
+  const [products, setProducts] = React.useState<Product[]>(INITIAL_PRODUCTS);
   const [filter, setFilter] = React.useState('All');
   const [search, setSearch] = React.useState('');
   const { addItem } = useCart();
@@ -14,9 +16,25 @@ export const Shop = () => {
   const categories = ['All', 'Chocolate', 'Vanilla', 'Red Velvet', 'Eggless', 'Custom'];
 
   React.useEffect(() => {
-    fetch('/api/products')
-      .then(res => res.json())
-      .then(setProducts);
+    const fetchProducts = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*');
+        
+        if (!error && data && data.length > 0) {
+          setProducts(data);
+        } else {
+          // Fallback to static products if Supabase is empty or errors
+          setProducts(INITIAL_PRODUCTS);
+        }
+      } catch (err) {
+        console.error("Failed to fetch products from Supabase:", err);
+        setProducts(INITIAL_PRODUCTS);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
   const filteredProducts = products.filter(p => {

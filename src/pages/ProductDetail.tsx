@@ -4,6 +4,8 @@ import { motion } from 'motion/react';
 import { ShoppingCart, Heart, Info, Check, Minus, Plus } from 'lucide-react';
 import { Product } from '../types';
 import { useCart } from '../context/CartContext';
+import { INITIAL_PRODUCTS } from '../constants/products';
+import { supabase } from '../lib/supabase';
 
 export const ProductDetail = () => {
   const { id } = useParams();
@@ -16,12 +18,28 @@ export const ProductDetail = () => {
   const [message, setMessage] = React.useState('');
 
   React.useEffect(() => {
-    fetch('/api/products')
-      .then(res => res.json())
-      .then(data => {
-        const found = data.find((p: Product) => p.id === Number(id));
-        if (found) setProduct(found);
-      });
+    const fetchProduct = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .eq('id', Number(id))
+          .single();
+        
+        if (!error && data) {
+          setProduct(data);
+        } else {
+          const found = INITIAL_PRODUCTS.find(p => p.id === Number(id));
+          setProduct(found || null);
+        }
+      } catch (err) {
+        console.error("Failed to fetch product from Supabase:", err);
+        const found = INITIAL_PRODUCTS.find(p => p.id === Number(id));
+        setProduct(found || null);
+      }
+    };
+
+    fetchProduct();
   }, [id]);
 
   if (!product) return <div className="py-20 text-center">Loading...</div>;

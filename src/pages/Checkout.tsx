@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { CheckCircle, Calendar, Clock, CreditCard, Truck } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 const schema = z.object({
   first_name: z.string().min(2, 'First name is required'),
@@ -36,16 +37,25 @@ export const Checkout = () => {
     setIsSubmitting(true);
     try {
       const productName = items.map(i => i.name).join(', ');
-      const response = await fetch('/api/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...data,
-          product_name: productName,
-          total_amount: total,
-        }),
-      });
-      if (response.ok) {
+      
+      // Save directly to Supabase
+      const { error } = await supabase
+        .from('orders')
+        .insert([
+          { 
+            first_name: data.first_name, 
+            last_name: data.last_name, 
+            email: data.email, 
+            street_address: data.street_address, 
+            city: data.city, 
+            zip_code: data.zip_code, 
+            product_name: productName, 
+            total_amount: total, 
+            status: 'pending'
+          }
+        ]);
+      
+      if (!error) {
         if (data.payment_method === 'cod') {
           setIsSuccess(true);
           clearCart();
@@ -55,6 +65,9 @@ export const Checkout = () => {
           setIsSuccess(true);
           clearCart();
         }
+      } else {
+        console.error("Supabase Order Error:", error);
+        alert("Failed to place order. Please try again.");
       }
     } catch (error) {
       console.error(error);

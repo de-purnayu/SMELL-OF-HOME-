@@ -22,13 +22,14 @@ export interface CartItem extends Product {
 
 export interface Order {
   id: number;
-  customer_name: string;
-  phone: string;
-  address: string;
-  delivery_date: string;
-  delivery_time: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  street_address: string;
+  city: string;
+  zip_code: string;
+  product_name: string;
   total_amount: number;
-  items: string; // JSON string
   status: string;
   created_at: string;
 }

@@ -1,19 +1,32 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Order } from '../types';
-import { Package, Clock, CheckCircle, User, Phone, MapPin } from 'lucide-react';
+import { Package, Clock, CheckCircle, User, Phone, MapPin, Mail } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 export const Admin = () => {
   const [orders, setOrders] = React.useState<Order[]>([]);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    fetch('/api/admin/orders')
-      .then(res => res.json())
-      .then(data => {
-        setOrders(data);
+    const fetchOrders = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('orders')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        if (!error && data) {
+          setOrders(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch orders from Supabase:", err);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchOrders();
   }, []);
 
   if (loading) return <div className="py-20 text-center">Loading Dashboard...</div>;
@@ -40,7 +53,6 @@ export const Admin = () => {
       <div className="space-y-6">
         <h2 className="text-2xl mb-6">Recent Orders</h2>
         {orders.map((order) => {
-          const items = JSON.parse(order.items);
           return (
             <motion.div
               layout
@@ -53,29 +65,25 @@ export const Admin = () => {
                     <Package className="w-4 h-4" /> Order #{order.id}
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <User className="w-4 h-4 text-brand-brown/40" /> {order.customer_name}
+                    <User className="w-4 h-4 text-brand-brown/40" /> {order.first_name} {order.last_name}
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <Phone className="w-4 h-4 text-brand-brown/40" /> {order.phone}
+                    <Mail className="w-4 h-4 text-brand-brown/40" /> {order.email}
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-sm">
-                    <MapPin className="w-4 h-4 text-brand-brown/40" /> {order.address}
+                    <MapPin className="w-4 h-4 text-brand-brown/40" /> {order.street_address}, {order.city} - {order.zip_code}
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <Clock className="w-4 h-4 text-brand-brown/40" /> {order.delivery_date} at {order.delivery_time}
+                    <Clock className="w-4 h-4 text-brand-brown/40" /> {new Date(order.created_at).toLocaleString()}
                   </div>
                 </div>
 
                 <div className="space-y-1">
                   <p className="text-xs font-bold uppercase text-brand-brown/40 mb-2">Items</p>
-                  {items.map((item: any, idx: number) => (
-                    <p key={idx} className="text-xs">
-                      {item.name} x {item.qty} ({item.customization?.size})
-                    </p>
-                  ))}
+                  <p className="text-xs">{order.product_name}</p>
                 </div>
 
                 <div className="flex flex-col justify-between items-end">
