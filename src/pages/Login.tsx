@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Phone, Lock, LogIn, UserPlus, AlertCircle, CheckCircle } from 'lucide-react';
+import { Mail, Lock, LogIn, UserPlus, AlertCircle, CheckCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 export const Login = () => {
   const navigate = useNavigate();
   const [isSignUp, setIsSignUp] = useState(false);
-  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,14 +22,14 @@ export const Login = () => {
     try {
       if (isSignUp) {
         const { error } = await supabase.auth.signUp({
-          phone,
+          email,
           password,
         });
         if (error) throw error;
-        setMessage('Account created! You can now sign in.');
+        setMessage('Account created! Check your email for a confirmation link.');
       } else {
         const { error } = await supabase.auth.signInWithPassword({
-          phone,
+          email,
           password,
         });
         if (error) throw error;
@@ -82,16 +82,16 @@ export const Login = () => {
 
         <form onSubmit={handleAuth} className="space-y-6">
           <div className="space-y-2">
-            <label className="text-sm font-bold uppercase tracking-wider text-brand-soft-brown ml-1">Phone Number</label>
+            <label className="text-sm font-bold uppercase tracking-wider text-brand-soft-brown ml-1">Email Address</label>
             <div className="relative">
-              <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-brown/30" />
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-brown/30" />
               <input 
-                type="tel" 
+                type="email" 
                 required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-12 pr-4 py-4 rounded-2xl border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink bg-white"
-                placeholder="+91 00000 00000"
+                placeholder="your@email.com"
               />
             </div>
           </div>
