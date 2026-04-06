@@ -2,18 +2,19 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Search, Filter, ShoppingCart } from 'lucide-react';
 import { Product } from '../types';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { INITIAL_PRODUCTS } from '../constants/products';
 import { supabase } from '../lib/supabase';
 
 export const Shop = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = React.useState<Product[]>(INITIAL_PRODUCTS);
   const [filter, setFilter] = React.useState('All');
   const [search, setSearch] = React.useState('');
   const { addItem } = useCart();
 
-  const categories = ['All', 'Chocolate', 'Vanilla', 'Red Velvet', 'Eggless', 'Custom'];
+  const categories = ['All', 'Chocolate', 'Vanilla', 'Red Velvet', 'Eggless', 'No Filling', 'Custom'];
 
   React.useEffect(() => {
     const fetchProducts = async () => {
@@ -49,7 +50,8 @@ export const Shop = () => {
       flavour: 'Chocolate',
       design: '',
       isEggless: false,
-      message: ''
+      message: '',
+      phone: ''
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -71,8 +73,8 @@ export const Shop = () => {
         flavour: customCake.flavour,
         design: customCake.design
       });
-      alert('Custom cake added to cart!');
-      setCustomCake({ size: '0.5kg', flavour: 'Chocolate', design: '', isEggless: false, message: '' });
+      setCustomCake({ size: '0.5kg', flavour: 'Chocolate', design: '', isEggless: false, message: '', phone: '' });
+      navigate('/cart');
     };
 
     return (
@@ -135,6 +137,18 @@ export const Shop = () => {
                 placeholder="Happy Birthday, etc..."
                 value={customCake.message}
                 onChange={(e) => setCustomCake({...customCake, message: e.target.value})}
+                className="w-full p-3 rounded-xl border border-brand-pink bg-white focus:ring-2 focus:ring-brand-pink outline-none text-base"
+              />
+            </div>
+
+            <div className="md:col-span-2 space-y-2">
+              <label className="text-sm font-bold uppercase tracking-wider text-brand-soft-brown">Phone Number (Required)</label>
+              <input 
+                required
+                type="tel"
+                placeholder="+91 00000 00000"
+                value={customCake.phone}
+                onChange={(e) => setCustomCake({...customCake, phone: e.target.value})}
                 className="w-full p-3 rounded-xl border border-brand-pink bg-white focus:ring-2 focus:ring-brand-pink outline-none text-base"
               />
             </div>
@@ -231,7 +245,10 @@ export const Shop = () => {
               <p className="text-sm text-brand-brown/60 mb-6 line-clamp-2">{product.description}</p>
               <div className="flex gap-2">
                 <button 
-                  onClick={() => addItem(product, 1)}
+                  onClick={() => {
+                    addItem(product, 1);
+                    navigate('/cart');
+                  }}
                   className="flex-1 btn-primary py-2 text-sm flex items-center justify-center gap-2"
                 >
                   <ShoppingCart className="w-4 h-4" /> Add to Cart

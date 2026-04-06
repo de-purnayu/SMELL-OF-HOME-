@@ -2,16 +2,18 @@ import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { CheckCircle, Calendar, Clock, CreditCard, Truck } from 'lucide-react';
+import { CheckCircle, Calendar, Clock, CreditCard, Truck, Package } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 const schema = z.object({
   first_name: z.string().min(2, 'First name is required'),
   last_name: z.string().min(2, 'Last name is required'),
   email: z.string().email('Valid email is required'),
+  phone_number: z.string().min(10, 'Valid phone number is required'),
   street_address: z.string().min(5, 'Street address is required'),
   city: z.string().min(2, 'City is required'),
   zip_code: z.string().min(6, 'Valid zip code is required'),
@@ -20,9 +22,11 @@ const schema = z.object({
 
 export const Checkout = () => {
   const { items, total, clearCart } = useCart();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
+  const [placedOrder, setPlacedOrder] = React.useState<any>(null);
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm({
     resolver: zodResolver(schema),
@@ -37,25 +41,28 @@ export const Checkout = () => {
     setIsSubmitting(true);
     try {
       const productName = items.map(i => i.name).join(', ');
+      const orderData = { 
+        user_id: user?.id || null,
+        first_name: data.first_name, 
+        last_name: data.last_name, 
+        email: data.email, 
+        phone_number: data.phone_number,
+        street_address: data.street_address, 
+        city: data.city, 
+        zip_code: data.zip_code, 
+        product_name: productName, 
+        total_amount: total, 
+        status: 'pending'
+      };
       
       // Save directly to Supabase
-      const { error } = await supabase
+      const { data: insertedData, error } = await supabase
         .from('orders')
-        .insert([
-          { 
-            first_name: data.first_name, 
-            last_name: data.last_name, 
-            email: data.email, 
-            street_address: data.street_address, 
-            city: data.city, 
-            zip_code: data.zip_code, 
-            product_name: productName, 
-            total_amount: total, 
-            status: 'pending'
-          }
-        ]);
+        .insert([orderData])
+        .select();
       
       if (!error) {
+        setPlacedOrder(insertedData ? insertedData[0] : orderData);
         if (data.payment_method === 'cod') {
           setIsSuccess(true);
           clearCart();
@@ -78,21 +85,72 @@ export const Checkout = () => {
 
   if (isSuccess) {
     return (
-      <div className="py-32 px-6 text-center max-w-lg mx-auto">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-8"
-        >
-          <CheckCircle className="w-12 h-12 text-green-600" />
-        </motion.div>
-        <h1 className="text-4xl mb-4">Order Confirmed!</h1>
-        <p className="text-brand-brown/60 mb-8">
-          Thank you for choosing Smell of Home. Malavika has received your order and will start baking shortly!
-        </p>
-        <Link to="/" className="btn-primary inline-block">
-          Back to Home
-        </Link>
+      <div className="py-12 px-6 max-w-2xl mx-auto">
+        <div className="text-center mb-12">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-8"
+          >
+            <CheckCircle className="w-12 h-12 text-green-600" />
+          </motion.div>
+          <h1 className="text-4xl mb-4 font-serif">Order Received!</h1>
+          <p className="text-brand-brown/70 text-lg mb-2">
+            We have received your order. Thank you for ordering!
+          </p>
+          <p className="text-brand-soft-brown font-bold text-lg mb-8">
+            We will call you shortly to confirm the order details.
+          </p>
+        </div>
+
+        {placedOrder && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-brand-pink mb-12"
+          >
+            <h2 className="text-2xl font-serif mb-6 flex items-center gap-2">
+              <Package className="w-6 h-6 text-brand-soft-brown" /> Order Section
+            </h2>
+            
+            <div className="space-y-6">
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <p className="text-brand-brown/40 uppercase font-bold text-[10px]">Customer</p>
+                  <p className="font-medium">{placedOrder.first_name} {placedOrder.last_name}</p>
+                </div>
+                <div>
+                  <p className="text-brand-brown/40 uppercase font-bold text-[10px]">Phone</p>
+                  <p className="font-medium">{placedOrder.phone_number}</p>
+                </div>
+              </div>
+
+              <div>
+                <p className="text-brand-brown/40 uppercase font-bold text-[10px]">Ordered Cakes</p>
+                <p className="font-medium text-brand-soft-brown">{placedOrder.product_name}</p>
+              </div>
+
+              <div className="flex justify-between items-center pt-4 border-t border-brand-pink/30">
+                <div>
+                  <p className="text-brand-brown/40 uppercase font-bold text-[10px]">Total Amount</p>
+                  <p className="text-2xl font-bold">₹{placedOrder.total_amount}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-brand-brown/40 uppercase font-bold text-[10px]">Status</p>
+                  <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-[10px] font-bold uppercase tracking-widest">
+                    {placedOrder.status}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        <div className="text-center">
+          <Link to="/" className="btn-primary inline-block px-12">
+            Back to Home
+          </Link>
+        </div>
       </div>
     );
   }
@@ -138,6 +196,16 @@ export const Checkout = () => {
                   placeholder="your@email.com"
                 />
                 {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+              </div>
+              <div>
+                <label className="block text-sm font-bold mb-2">Phone Number</label>
+                <input 
+                  {...register('phone_number')}
+                  type="tel"
+                  className="w-full px-4 py-3 rounded-2xl border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink text-base"
+                  placeholder="+91 00000 00000"
+                />
+                {errors.phone_number && <p className="text-red-500 text-xs mt-1">{errors.phone_number.message}</p>}
               </div>
               <div>
                 <label className="block text-sm font-bold mb-2">Street Address</label>

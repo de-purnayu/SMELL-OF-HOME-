@@ -1,12 +1,14 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, Menu, X, Heart } from 'lucide-react';
+import { ShoppingBag, Menu, X, Heart, User, LogOut, ClipboardList } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'motion/react';
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const { items } = useCart();
+  const { user, signOut } = useAuth();
   const location = useLocation();
 
   const navLinks = [
@@ -24,7 +26,7 @@ export const Navbar = () => {
         <div className="w-10 h-10 bg-brand-pink rounded-full flex items-center justify-center group-hover:rotate-12 transition-transform">
           <Heart className="text-brand-brown fill-brand-brown w-5 h-5" />
         </div>
-        <span className="text-xl sm:text-2xl font-serif font-bold tracking-tight">smell of home</span>
+        <span className="text-xl sm:text-2xl font-serif font-bold tracking-tight">Smell of Home</span>
       </Link>
 
       {/* Desktop Nav */}
@@ -43,6 +45,38 @@ export const Navbar = () => {
       </div>
 
       <div className="flex items-center gap-2 sm:gap-4">
+        {user ? (
+          <div className="hidden md:flex items-center gap-4">
+            <Link 
+              to="/orders" 
+              className="flex items-center gap-2 px-4 py-2 hover:bg-brand-pink/30 text-brand-brown/70 hover:text-brand-soft-brown rounded-full transition-all"
+            >
+              <ClipboardList className="w-4 h-4" />
+              <span className="text-xs font-bold">My Orders</span>
+            </Link>
+            <div className="flex items-center gap-2 px-4 py-2 bg-brand-pink/30 rounded-full border border-brand-pink">
+              <User className="w-4 h-4 text-brand-soft-brown" />
+              <span className="text-xs font-bold text-brand-brown truncate max-w-[100px]">
+                {user.email?.split('@')[0]}
+              </span>
+            </div>
+            <button 
+              onClick={() => signOut()}
+              className="p-2 hover:bg-red-50 text-brand-brown/40 hover:text-red-500 rounded-full transition-colors"
+              title="Sign Out"
+            >
+              <LogOut className="w-5 h-5" />
+            </button>
+          </div>
+        ) : (
+          <Link 
+            to="/login" 
+            className="hidden md:flex items-center gap-2 px-5 py-2 bg-brand-brown text-white rounded-full text-xs font-bold hover:bg-brand-soft-brown transition-all"
+          >
+            <User className="w-4 h-4" /> Sign In
+          </Link>
+        )}
+
         <Link to="/cart" className="relative p-2 hover:bg-brand-pink rounded-full transition-colors">
           <ShoppingBag className="w-6 h-6" />
           {cartCount > 0 && (
@@ -99,6 +133,39 @@ export const Navbar = () => {
                     </Link>
                   </motion.div>
                 ))}
+
+                <div className="mt-2 pt-2 border-t border-brand-pink/30">
+                  {user ? (
+                    <div className="flex flex-col gap-2">
+                      <Link 
+                        to="/orders" 
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center gap-3 p-4 hover:bg-brand-pink/20 rounded-2xl transition-all"
+                      >
+                        <ClipboardList className="w-5 h-5 text-brand-soft-brown" />
+                        <span className="font-bold text-brand-brown">My Orders</span>
+                      </Link>
+                      <div className="flex items-center gap-3 p-4 bg-brand-pink/20 rounded-2xl">
+                        <User className="w-5 h-5 text-brand-soft-brown" />
+                        <span className="font-bold text-brand-brown truncate">{user.email}</span>
+                      </div>
+                      <button 
+                        onClick={() => { signOut(); setIsOpen(false); }}
+                        className="flex items-center justify-center gap-2 p-4 text-red-500 font-bold hover:bg-red-50 rounded-2xl transition-all"
+                      >
+                        <LogOut className="w-5 h-5" /> Sign Out
+                      </button>
+                    </div>
+                  ) : (
+                    <Link 
+                      to="/login" 
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center justify-center gap-2 p-4 bg-brand-brown text-white rounded-2xl font-bold transition-all"
+                    >
+                      <User className="w-5 h-5" /> Sign In
+                    </Link>
+                  )}
+                </div>
                 
                 <div className="mt-4 pt-4 border-t border-brand-pink/30">
                   <Link 

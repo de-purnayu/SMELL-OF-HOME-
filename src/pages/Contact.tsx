@@ -90,9 +90,13 @@ export const Contact = () => {
                   <input type="text" required className="w-full px-4 py-3 rounded-2xl border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink" />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold mb-2">Email</label>
-                  <input type="email" required className="w-full px-4 py-3 rounded-2xl border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink" />
+                  <label className="block text-sm font-bold mb-2">Phone Number</label>
+                  <input type="tel" required className="w-full px-4 py-3 rounded-2xl border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink" />
                 </div>
+              </div>
+              <div>
+                <label className="block text-sm font-bold mb-2">Email</label>
+                <input type="email" required className="w-full px-4 py-3 rounded-2xl border border-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink" />
               </div>
               <div>
                 <label className="block text-sm font-bold mb-2">Subject</label>

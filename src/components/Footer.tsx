@@ -7,7 +7,7 @@ export const Footer = () => {
     <footer className="bg-brand-brown text-white py-20 px-6 md:px-12">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
         <div className="md:col-span-2">
-          <Link to="/" className="text-3xl font-serif font-bold mb-6 block">smell of home</Link>
+          <Link to="/" className="text-3xl font-serif font-bold mb-6 block">Smell of Home</Link>
           <p className="text-white/60 max-w-sm mb-8">
             Authentic, freshly baked homemade cakes by Malavika Tripaty. Bringing the warmth of home-baked goodness to Contai.
           </p>
@@ -52,8 +52,9 @@ export const Footer = () => {
           </ul>
         </div>
       </div>
-      <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-white/10 text-center text-white/40 text-xs">
-        © {new Date().getFullYear()} Smell of Home. All rights reserved. Handcrafted by Malavika Tripaty.
+      <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-white/10 text-center text-white/40 text-[10px] flex flex-col items-center gap-2">
+        <p>© {new Date().getFullYear()} Smell of Home. All rights reserved. Handcrafted by Malavika Tripaty.</p>
+        <Link to="/admin" className="hover:text-white transition-colors opacity-50 hover:opacity-100">Admin Access</Link>
       </div>
     </footer>
   );
